@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ashvin Chaudhary — Networking · Cybersecurity · BCA Student</title>
+  <meta name="description" content="Portfolio of Ashvin Chaudhary, BCA (Hons.) student focused on computer networks, network security, and ethical cybersecurity. Home labs, Cisco certs, TryHackMe & Hack The Box.">
+  <meta name="theme-color" content="#0A0C16">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%237C6FFF'/%3E%3Ctext x='50%25' y='58%25' font-size='13' font-family='monospace' fill='white' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Space Grotesk', 'sans-serif'],
+            body: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="font-body">
+  <!-- Custom Cursor -->
+  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+  <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+  <!-- Ambient Mesh Background -->
+  <div class="mesh-bg" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <!-- Scroll Progress -->
+  <div id="scroll-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Page scroll progress"></div>
+
+  <!-- Currently Learning Banner -->
+  <div id="learning-banner" class="learning-banner" role="status" aria-live="polite">
+    <div class="learning-inner">
+      <span class="learning-pulse" aria-hidden="true"></span>
+      <span class="learning-label">Currently learning</span>
+      <span class="learning-topic" id="learningTopic">Advanced OSPF · Burp Suite Intruder · Network Automation with Python</span>
+    </div>
+    <button id="closeLearning" class="learning-close" aria-label="Dismiss currently learning banner">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+
+  <!-- Navigation -->
+  <header id="nav" role="banner">
+    <div class="nav-inner">
+      <a href="#home" class="font-display font-semibold text-lg tracking-tight" aria-label="Ashvin.dev home">Ashvin<span style="color:var(--aqua)">.</span>dev</a>
+      <nav class="hidden md:flex items-center relative" id="navLinks" aria-label="Primary">
+        <div id="nav-pill" aria-hidden="true"></div>
+        <a href="#about" class="nav-link" data-section="about">About</a>
+        <a href="#skills" class="nav-link" data-section="skills">Skills</a>
+        <a href="#certs" class="nav-link" data-section="certs">Certs</a>
+        <a href="#projects" class="nav-link" data-section="projects">Work</a>
+        <a href="#blog" class="nav-link" data-section="blog">Notes</a>
+        <a href="#experience" class="nav-link" data-section="experience">Path</a>
+        <a href="#contact" class="nav-link" data-section="contact">Contact</a>
+      </nav>
+      <div class="flex items-center gap-2">
+        <!-- Theme Toggle -->
+        <button id="themeToggle" class="theme-toggle glass" aria-label="Toggle dark and light theme" title="Toggle theme">
+          <i class="fa-solid fa-moon theme-icon-dark" aria-hidden="true"></i>
+          <i class="fa-solid fa-sun theme-icon-light" aria-hidden="true"></i>
+        </button>
+        <button class="btn btn-ghost hidden sm:inline-flex magnetic btn-download" data-magnetic data-download-resume aria-label="Download resume PDF">
+          <span class="btn-label"><i class="fa-solid fa-download" aria-hidden="true"></i> Resume</span>
+          <span class="download-progress" aria-hidden="true"></span>
+        </button>
+        <button id="menuBtn" class="md:hidden glass menu-btn" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" width="18" height="18" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" role="dialog" aria-modal="true" aria-label="Mobile navigation" aria-hidden="true">
+    <button id="closeMenuBtn" class="absolute top-6 right-6 glass menu-btn" aria-label="Close menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" width="18" height="18" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <nav class="flex flex-col items-center gap-6" aria-label="Mobile primary">
+      <a href="#about" class="mobile-link">About</a>
+      <a href="#skills" class="mobile-link">Skills</a>
+      <a href="#certs" class="mobile-link">Certs</a>
+      <a href="#projects" class="mobile-link">Work</a>
+      <a href="#blog" class="mobile-link">Notes</a>
+      <a href="#experience" class="mobile-link">Path</a>
+      <a href="#contact" class="mobile-link">Contact</a>
+    </nav>
+  </div>
+
+  <main id="main-content">
+    <!-- HERO -->
+    <section id="home" class="container min-h-screen flex items-center pt-28 pb-16" aria-labelledby="hero-heading">
+      <div class="grid md:grid-cols-2 gap-10 lg:gap-14 items-center w-full">
+        <div>
+          <p class="eyebrow hero-anim">// BCA (Hons.) Student</p>
+          <p class="eyebrow hero-anim">// Networking Enthusiast</p>
+          <p class="eyebrow hero-anim">// Cybersecurity Learner</p>
+          <h1 id="hero-heading" class="hero-anim font-display font-semibold text-[clamp(2rem,5vw,3.2rem)] leading-[1.08] mt-4">
+            Building secure<br />
+            <span class="gradient-text">networks &amp; systems.</span>
+          </h1>
+          <p class="hero-anim text-[var(--slate)] mt-6 max-w-md leading-relaxed text-[clamp(0.9rem,2vw,1rem)]">
+            I&apos;m Ashvin Chaudhary — first-year BCA student focused on computer networks, network security, and ethical cybersecurity. I design labs, analyze traffic, and continuously practice on TryHackMe &amp; Hack The Box.
+          </p>
+          <div class="hero-anim flex flex-wrap gap-3 mt-8">
+            <a href="#projects" class="btn btn-primary magnetic" data-magnetic>
+              View My Work
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <button class="btn btn-ghost magnetic btn-download" data-magnetic data-download-resume aria-label="Download resume">
+              <span class="btn-label"><i class="fa-solid fa-download" aria-hidden="true"></i> Download Resume</span>
+              <span class="download-progress" aria-hidden="true"></span>
+            </button>
+          </div>
+          <div class="hero-anim flex gap-6 sm:gap-10 mt-10 sm:mt-12">
+            <div><p class="stat-num" data-count="50">0</p><p class="text-xs text-[var(--slate)] mt-1">TryHackMe rooms</p></div>
+            <div><p class="stat-num" data-count="20">0</p><p class="text-xs text-[var(--slate)] mt-1">HTB machines</p></div>
+            <div><p class="stat-num" data-count="4">0</p><p class="text-xs text-[var(--slate)] mt-1">Certifications</p></div>
+          </div>
+        </div>
+        <div class="hero-anim flex justify-center md:justify-end">
+          <div class="terminal glass" id="terminalCard" role="region" aria-label="Interactive terminal. Click to focus and type commands." tabindex="0">
+            <div class="terminal-bar">
+              <span class="tdot violet" aria-hidden="true"></span>
+              <span class="tdot aqua" aria-hidden="true"></span>
+              <span class="tdot coral" aria-hidden="true"></span>
+              <span class="terminal-tab">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="13" height="13" aria-hidden="true"><path d="M8 16 4 12l4-4M16 8l4 4-4 4"/></svg>
+                ashvin@portfolio:~
+              </span>
+              <span class="saved-pill ml-auto" id="savedPill">✓ ready</span>
+            </div>
+            <div class="terminal-body" id="codeBody" aria-live="polite"></div>
+            <div class="terminal-input-line" id="terminalInputLine">
+              <span class="prompt-text"><span class="tok-var">ashvin@portfolio</span><span class="tok-op">:</span><span class="tok-prop">~</span><span class="tok-op">$ </span></span>
+              <span class="input-text" id="terminalInput" contenteditable="true" spellcheck="false" role="textbox" aria-label="Terminal command input"></span>
+              <span class="caret" id="terminalCaret" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <a href="#about" class="absolute bottom-8 left-1/2 -translate-x-1/2 hidden sm:flex flex-col items-center gap-2 scroll-down-link" aria-label="Scroll to about section">
+        <span class="scroll-cue"><span></span></span>
+      </a>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="container py-20 sm:py-28" aria-labelledby="about-heading">
+      <p class="section-tag reveal">01 — About</p>
+      <h2 id="about-heading" class="font-display text-[clamp(1.75rem,4vw,2.5rem)] font-semibold mt-3 reveal">Focused on networks &amp; security</h2>
+      <div class="grid md:grid-cols-[280px_1fr] gap-8 md:gap-10 mt-10 md:mt-12">
+        <div class="reveal">
+          <div class="glass spotlight p-6 flex flex-col items-center text-center">
+            <!-- AFTER -->
+             <!-- <img src="https://api.dicebear.com/9.x/pixel-art/svg?seed=AshvinChaudhary&backgroundColor=0f1224" alt="Ashvin Cyber Avatar" class="w-28 h-28 rounded-full border-2 border-[var(--glass-border-strong)] shadow-lg bg-[var(--surface)] p-1" /> -->
+              <div class="relative cursor-pointer group" id="avatarTrigger" role="button" aria-label="View full size profile picture" tabindex="0">
+               <img src="profile.jpeg" id="avatarImg" alt="Ashvin Chaudhary" class="w-28 h-28 rounded-full object-cover border-2 border-[var(--glass-border-strong)] shadow-lg transition-transform duration-300 group-hover:scale-105" />
+                <span class="absolute inset-0 rounded-full bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-xs text-white font-mono pointer-events-none">
+                <i class="fa-solid fa-expand"></i>
+            </span>
+          </div>
+            <p class="font-display font-semibold mt-4">Ashvin Chaudhary</p>
+            <p class="text-xs text-[var(--slate)]">BCA (Hons.) · Networking · Cyber</p>
+            <div class="w-full mt-6 flex flex-col gap-3 text-left text-sm text-[var(--slate)]">
+              <div class="flex items-center gap-2">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--aqua)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="15" height="15" aria-hidden="true"><path d="M12 21s-7-7.5-7-12a7 7 0 1 1 14 0c0 4.5-7 12-7 12z"/><circle cx="12" cy="9" r="2.4"/></svg>
+                Dhanera, Gujarat — open to remote
+              </div>
+              <div class="flex items-center gap-2">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--aqua)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="15" height="15" aria-hidden="true"><rect x="2" y="7" width="20" height="13" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+                1st Year BCA · Ganpat University
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="status-dot" aria-hidden="true"></span>
+                Building home labs &amp; writing notes
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reveal">
+          <p class="text-[var(--slate)] leading-relaxed">
+            I started exploring networks out of curiosity about how data moves across the wire. That curiosity grew into practical work with VLANs, routing, firewalls, and traffic analysis, then into ethical cybersecurity through controlled labs and CTF platforms.
+          </p>
+          <p class="text-[var(--slate)] leading-relaxed mt-4">
+            Today I maintain a personal home lab (VirtualBox + GNS3 + Kali), practice daily on TryHackMe and Hack The Box, and document what I learn. I hold Cisco certifications in Networking and Cybersecurity Essentials and continuously expand both depth and breadth.
+          </p>
+
+          <!-- GitHub Contribution Graph -->
+          <div class="mt-8">
+            <p class="text-xs font-mono text-[var(--slate)] mb-3 flex items-center gap-2">
+              <i class="fa-brands fa-github" aria-hidden="true"></i> Recent contributions
+            </p>
+            <div class="contrib-graph glass p-4" id="contribGraph" role="img" aria-label="GitHub contribution graph for the last 12 weeks">
+              <div class="contrib-weeks" id="contribWeeks"></div>
+              <div class="contrib-legend">
+                <span class="text-[10px] text-[var(--slate)]">Less</span>
+                <span class="contrib-cell l0" aria-hidden="true"></span>
+                <span class="contrib-cell l1" aria-hidden="true"></span>
+                <span class="contrib-cell l2" aria-hidden="true"></span>
+                <span class="contrib-cell l3" aria-hidden="true"></span>
+                <span class="contrib-cell l4" aria-hidden="true"></span>
+                <span class="text-[10px] text-[var(--slate)]">More</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-4 mt-8">
+            <button class="btn btn-ghost magnetic btn-download" data-magnetic data-download-resume aria-label="Download resume">
+              <span class="btn-label"><i class="fa-solid fa-download" aria-hidden="true"></i> Download Resume</span>
+              <span class="download-progress" aria-hidden="true"></span>
+            </button>
+            <div class="flex gap-3 items-center">
+              <a href="https://github.com/ashvinchaudhary2003" target="_blank" rel="noopener noreferrer" class="icon-link icon-github" aria-label="GitHub profile" data-magnetic><i class="fa-brands fa-github" aria-hidden="true"></i></a>
+              <a href="https://linkedin.com/in/ar-chaudhari2003" target="_blank" rel="noopener noreferrer" class="icon-link icon-linkedin" aria-label="LinkedIn profile" data-magnetic><i class="fa-brands fa-linkedin" aria-hidden="true"></i></a>
+              <a href="mailto:Archaudhari2003@proton.me" class="icon-link icon-email" aria-label="Send email" data-magnetic><i class="fa-solid fa-envelope" aria-hidden="true"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills" class="container py-16 sm:py-20" aria-labelledby="skills-heading">
+      <p class="section-tag reveal">02 — Skills &amp; Tools</p>
+      <h2 id="skills-heading" class="font-display text-[clamp(1.75rem,4vw,2.5rem)] font-semibold mt-3 reveal">What I work with</h2>
+      <div class="grid lg:grid-cols-2 gap-8 lg:gap-10 mt-10 md:mt-12">
+        <div class="reveal">
+          <div class="skill-category">
+            <h3><span class="skill-dot" style="background:var(--violet)" aria-hidden="true"></span> Networking</h3>
+            <div class="skill-pills">
+              <span class="skill-pill"><i class="fa-solid fa-network-wired skill-icon" aria-hidden="true"></i> TCP/IP &amp; OSI</span>
+              <span class="skill-pill"><i class="fa-solid fa-diagram-project skill-icon" aria-hidden="true"></i> VLANs &amp; Trunking</span>
+              <span class="skill-pill"><i class="fa-solid fa-sitemap skill-icon" aria-hidden="true"></i> Subnetting / CIDR</span>
+              <span class="skill-pill"><i class="fa-solid fa-route skill-icon" aria-hidden="true"></i> OSPF (basics)</span>
+              <span class="skill-pill"><i class="fa-solid fa-server skill-icon" aria-hidden="true"></i> DNS · DHCP · NAT</span>
+              <span class="skill-pill"><i class="fa-solid fa-shield-halved skill-icon" aria-hidden="true"></i> ACLs &amp; Firewalls</span>
+              <span class="skill-pill"><i class="fa-solid fa-lock skill-icon" aria-hidden="true"></i> IPsec VPN</span>
+              <span class="skill-pill"><i class="fa-solid fa-project-diagram skill-icon" aria-hidden="true"></i> Packet Tracer</span>
+              <span class="skill-pill"><i class="fa-solid fa-network-wired skill-icon" aria-hidden="true"></i> GNS3</span>
+              <span class="skill-pill"><i class="fa-solid fa-wave-square skill-icon" aria-hidden="true"></i> Wireshark</span>
+            </div>
+          </div>
+          <div class="skill-category">
+            <h3><span class="skill-dot" style="background:var(--aqua)" aria-hidden="true"></span> Cybersecurity</h3>
+            <div class="skill-pills">
+              <span class="skill-pill"><i class="fa-solid fa-magnifying-glass skill-icon" aria-hidden="true"></i> Recon &amp; OSINT</span>
+              <span class="skill-pill"><i class="fa-solid fa-bug skill-icon" aria-hidden="true"></i> Vulnerability Assessment</span>
+              <span class="skill-pill"><i class="fa-solid fa-globe skill-icon" aria-hidden="true"></i> Web App Security</span>
+              <span class="skill-pill"><i class="fa-solid fa-shield-halved skill-icon" aria-hidden="true"></i> Nmap</span>
+              <span class="skill-pill"><i class="fa-solid fa-spider skill-icon" aria-hidden="true"></i> Burp Suite</span>
+              <span class="skill-pill"><i class="fa-solid fa-bomb skill-icon" aria-hidden="true"></i> Metasploit (basics)</span>
+              <span class="skill-pill"><i class="fa-solid fa-terminal skill-icon" aria-hidden="true"></i> Nikto · Hydra</span>
+              <span class="skill-pill"><i class="fa-solid fa-chart-line skill-icon" aria-hidden="true"></i> Traffic Analysis</span>
+            </div>
+          </div>
+          <div class="skill-category">
+            <h3><span class="skill-dot" style="background:var(--coral)" aria-hidden="true"></span> Programming &amp; Platforms</h3>
+            <div class="skill-pills">
+              <span class="skill-pill"><i class="fa-brands fa-python skill-icon" aria-hidden="true"></i> Python</span>
+              <span class="skill-pill"><i class="fa-solid fa-terminal skill-icon" aria-hidden="true"></i> Bash</span>
+              <span class="skill-pill"><i class="fa-brands fa-js skill-icon" aria-hidden="true"></i> JavaScript (basics)</span>
+              <span class="skill-pill"><i class="fa-brands fa-linux skill-icon" aria-hidden="true"></i> Linux (Kali / Ubuntu)</span>
+              <span class="skill-pill"><i class="fa-solid fa-box skill-icon" aria-hidden="true"></i> VirtualBox</span>
+              <span class="skill-pill"><i class="fa-solid fa-flag skill-icon" aria-hidden="true"></i> TryHackMe</span>
+              <span class="skill-pill"><i class="fa-solid fa-box-open skill-icon" aria-hidden="true"></i> Hack The Box</span>
+              <span class="skill-pill"><i class="fa-brands fa-github skill-icon" aria-hidden="true"></i> Git &amp; GitHub</span>
+            </div>
+          </div>
+        </div>
+        <div class="reveal">
+          <p class="text-sm text-[var(--slate)] mb-3 font-mono">Interactive skill network — drag nodes · click for details</p>
+          <div id="skill-network" class="glass" role="img" aria-label="Interactive skill network graph. Drag nodes or click for skill details.">
+            <div id="skill-popup" class="skill-popup glass" hidden role="dialog" aria-modal="false" aria-label="Skill details">
+              <button class="skill-popup-close" id="skillPopupClose" aria-label="Close skill details">&times;</button>
+              <h4 id="skillPopupTitle" class="font-display font-semibold"></h4>
+              <p id="skillPopupLevel" class="text-xs font-mono text-[var(--aqua)] mt-1"></p>
+              <p id="skillPopupDesc" class="text-sm text-[var(--slate)] mt-2"></p>
+              <p id="skillPopupProjects" class="text-xs text-[var(--slate-dim)] mt-2"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CERTIFICATIONS -->
+    <section id="certs" class="container py-16 sm:py-20" aria-labelledby="certs-heading">
+      <p class="section-tag reveal">03 — Certifications</p>
+      <h2 id="certs-heading" class="font-display text-[clamp(1.75rem,4vw,2.5rem)] font-semibold mt-3 reveal">Credentials &amp; learning paths</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-10 md:mt-12">
+        <article class="cert-card glass spotlight reveal">
+          <div class="cert-icon" aria-hidden="true"><i class="fa-solid fa-network-wired"></i></div>
+          <h3>Cisco Networking Basics</h3>
+          <p>Foundational networking concepts, devices &amp; protocols</p>
+          <a href="https://www.netacad.com/" target="_blank" rel="noopener noreferrer" class="cert-verify" aria-label="Verify Cisco Networking Basics on NetAcad">
+            <i class="fa-solid fa-badge-check" aria-hidden="true"></i> Verify
+          </a>
+        </article>
+        <article class="cert-card glass spotlight reveal">
+          <div class="cert-icon" aria-hidden="true"><i class="fa-solid fa-shield-halved"></i></div>
+          <h3>Cisco Intro to Cybersecurity</h3>
+          <p>Threat landscape, security principles &amp; best practices</p>
+          <a href="https://www.netacad.com/" target="_blank" rel="noopener noreferrer" class="cert-verify" aria-label="Verify Cisco Introduction to Cybersecurity">
+            <i class="fa-solid fa-badge-check" aria-hidden="true"></i> Verify
+          </a>
+        </article>
+        <article class="cert-card glass spotlight reveal">
+          <div class="cert-icon" aria-hidden="true"><i class="fa-solid fa-lock"></i></div>
+          <h3>Cisco Cybersecurity Essentials</h3>
+          <p>Core defensive and security operations knowledge</p>
+          <a href="https://www.netacad.com/" target="_blank" rel="noopener noreferrer" class="cert-verify" aria-label="Verify Cisco Cybersecurity Essentials">
+            <i class="fa-solid fa-badge-check" aria-hidden="true"></i> Verify
+          </a>
+        </article>
+        <article class="cert-card glass spotlight reveal">
+          <div class="cert-icon" aria-hidden="true"><i class="fa-solid fa-terminal"></i></div>
+          <h3>TryHackMe Pre-Security</h3>
+          <p>Completed learning path — solid foundation for further paths</p>
+          <a href="https://tryhackme.com/p/ashvin_chaudhary" target="_blank" rel="noopener noreferrer" class="cert-verify" aria-label="View TryHackMe Pre-Security path">
+            <i class="fa-solid fa-badge-check" aria-hidden="true"></i> Profile
+          </a>
+        </article>
+      </div>
+
+      <!-- Platform Badges -->
+      <div class="grid sm:grid-cols-2 gap-5 mt-8">
+        <a href="https://tryhackme.com/p/ashvin_chaudhary" target="_blank" rel="noopener noreferrer" class="platform-badge glass spotlight reveal flex items-center gap-4 p-5 no-underline" aria-label="TryHackMe profile - 50+ rooms">
+          <div class="platform-icon thm" aria-hidden="true"><i class="fa-solid fa-flag"></i></div>
+          <div>
+            <p class="font-display font-semibold">TryHackMe</p>
+            <p class="text-sm text-[var(--slate)]">50+ rooms · Pre-Security complete</p>
+            <p class="text-xs font-mono text-[var(--aqua)] mt-1">tryhackme.com/p/ashvin_chaudhary</p>
+          </div>
+        </a>
+        <a href="https://app.hackthebox.com/" target="_blank" rel="noopener noreferrer" class="platform-badge glass spotlight reveal flex items-center gap-4 p-5 no-underline" aria-label="Hack The Box profile - 20+ machines">
+          <div class="platform-icon htb" aria-hidden="true"><i class="fa-solid fa-box-open"></i></div>
+          <div>
+            <p class="font-display font-semibold">Hack The Box</p>
+            <p class="text-sm text-[var(--slate)]">20+ machines · Starting Point &amp; Easy</p>
+            <p class="text-xs font-mono text-[var(--aqua)] mt-1">Active practitioner</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" class="container py-20 sm:py-28" aria-labelledby="projects-heading">
+      <p class="section-tag reveal">04 — Selected Work</p>
+      <h2 id="projects-heading" class="font-display text-[clamp(1.75rem,4vw,2.5rem)] font-semibold mt-3 reveal">Labs &amp; projects</h2>
+      <p class="text-[var(--slate)] mt-3 max-w-xl reveal">All work performed in controlled lab environments. Placeholders ready for real demos and write-ups.</p>
+      <div class="grid md:grid-cols-2 gap-6 mt-10 md:mt-12">
+        <article class="project-card glass spotlight p-5 reveal">
+          <div class="project-cover"><div class="cover-icon" aria-hidden="true"><i class="fa-solid fa-sitemap"></i></div></div>
+          <h3 class="font-display text-xl font-semibold mt-5">Enterprise Campus Network</h3>
+          <p class="text-sm text-[var(--slate)] mt-2 leading-relaxed">Designed a scalable multi-VLAN campus topology with inter-VLAN routing, OSPF, DHCP, DNS and NAT. Documented with Cisco Packet Tracer diagrams.</p>
+          <div class="flex flex-wrap gap-2 mt-4"><span class="project-tag">Packet Tracer</span><span class="project-tag">VLANs</span><span class="project-tag">OSPF</span><span class="project-tag">DHCP / NAT</span></div>
+          <div class="flex gap-3 mt-5">
+            <a href="https://github.com/ashvinchaudhary2003" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="View project on GitHub" data-magnetic><i class="fa-brands fa-github" aria-hidden="true"></i></a>
+            <a href="#blog" class="icon-link" aria-label="View related notes" data-magnetic><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+          </div>
+        </article>
+        <article class="project-card glass spotlight p-5 reveal">
+          <div class="project-cover"><div class="cover-icon" aria-hidden="true"><i class="fa-solid fa-user-shield"></i></div></div>
+          <h3 class="font-display text-xl font-semibold mt-5">Secure Network + VPN</h3>
+          <p class="text-sm text-[var(--slate)] mt-2 leading-relaxed">Built a site-to-site network with ACLs, firewall rules and IPsec VPN. Tested remote access and verified restricted traffic flows between zones.</p>
+          <div class="flex flex-wrap gap-2 mt-4"><span class="project-tag">ACLs</span><span class="project-tag">IPsec VPN</span><span class="project-tag">Firewall</span><span class="project-tag">NAT</span></div>
+          <div class="flex gap-3 mt-5">
+            <a href="https://github.com/ashvinchaudhary2003" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="View project on GitHub" data-magnetic><i class="fa-brands fa-github" aria-hidden="true"></i></a>
+            <a href="#blog" class="icon-link" aria-label="View related notes" data-magnetic><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+          </div>
+        </article>
+        <article class="project-card glass spotlight p-5 reveal">
+          <div class="project-cover"><div class="cover-icon" aria-hidden="true"><i class="fa-solid fa-bug"></i></div></div>
+          <h3 class="font-display text-xl font-semibold mt-5">Vulnerability Assessment Lab</h3>
+          <p class="text-sm text-[var(--slate)] mt-2 leading-relaxed">Performed vulnerability scanning on intentionally vulnerable machines using Nmap, Nikto and OpenVAS. Documented findings and mitigation suggestions.</p>
+          <div class="flex flex-wrap gap-2 mt-4"><span class="project-tag">Nmap</span><span class="project-tag">Nikto</span><span class="project-tag">OpenVAS</span><span class="project-tag">Kali</span></div>
+          <div class="flex gap-3 mt-5">
+            <a href="https://github.com/ashvinchaudhary2003" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="View write-up on GitHub" data-magnetic><i class="fa-brands fa-github" aria-hidden="true"></i></a>
+            <a href="#blog" class="icon-link" aria-label="View report notes" data-magnetic><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+          </div>
+        </article>
+        <article class="project-card glass spotlight p-5 reveal">
+          <div class="project-cover"><div class="cover-icon" aria-hidden="true"><i class="fa-solid fa-code"></i></div></div>
+          <h3 class="font-display text-xl font-semibold mt-5">Web App Security Testing</h3>
+          <p class="text-sm text-[var(--slate)] mt-2 leading-relaxed">Conducted security testing on DVWA and OWASP Juice Shop. Identified and practiced common vulnerabilities (SQLi, XSS, CSRF, IDOR) in a controlled lab.</p>
+          <div class="flex flex-wrap gap-2 mt-4"><span class="project-tag">Burp Suite</span><span class="project-tag">OWASP Top 10</span><span class="project-tag">DVWA</span><span class="project-tag">Juice Shop</span></div>
+          <div class="flex gap-3 mt-5">
+            <a href="https://github.com/ashvinchaudhary2003" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="View write-up on GitHub" data-magnetic><i class="fa-brands fa-github" aria-hidden="true"></i></a>
+            <a href="#blog" class="icon-link" aria-label="View notes" data-magnetic><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+          </div>
+        </article>
+        <article class="project-card glass spotlight p-5 reveal">
+          <div class="project-cover"><div class="cover-icon" aria-hidden="true"><i class="fa-solid fa-chart-line"></i></div></div>
+          <h3 class="font-display text-xl font-semibold mt-5">Network Traffic Analysis</h3>
+          <p class="text-sm text-[var(--slate)] mt-2 leading-relaxed">Captured and analyzed network traffic with Wireshark. Identified protocols, anomalies, bandwidth patterns and potential security issues; produced clear reports.</p>
+          <div class="flex flex-wrap gap-2 mt-4"><span class="project-tag">Wireshark</span><span class="project-tag">TCP/IP</span><span class="project-tag">Protocol Analysis</span></div>
+          <div class="flex gap-3 mt-5">
+            <a href="https://github.com/ashvinchaudhary2003" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="View write-up on GitHub" data-magnetic><i class="fa-brands fa-github" aria-hidden="true"></i></a>
+            <a href="#blog" class="icon-link" aria-label="View report" data-magnetic><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+          </div>
+        </article>
+        <article class="project-card glass spotlight p-5 reveal">
+          <div class="project-cover"><div class="cover-icon" aria-hidden="true"><i class="fa-solid fa-server"></i></div></div>
+          <h3 class="font-display text-xl font-semibold mt-5">Home Lab &amp; CTF Write-ups</h3>
+          <p class="text-sm text-[var(--slate)] mt-2 leading-relaxed">Ongoing personal lab (VirtualBox + GNS3 + Kali) and public write-ups of rooms and machines completed on TryHackMe and Hack The Box.</p>
+          <div class="flex flex-wrap gap-2 mt-4"><span class="project-tag">VirtualBox</span><span class="project-tag">GNS3</span><span class="project-tag">THM</span><span class="project-tag">HTB</span></div>
+          <div class="flex gap-3 mt-5">
+            <a href="https://github.com/ashvinchaudhary2003" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="GitHub" data-magnetic><i class="fa-brands fa-github" aria-hidden="true"></i></a>
+            <a href="https://tryhackme.com/p/ashvin_chaudhary" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="TryHackMe profile" data-magnetic><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- BLOG / NOTES -->
+    <section id="blog" class="container py-16 sm:py-20" aria-labelledby="blog-heading">
+      <p class="section-tag reveal">05 — Notes &amp; Write-ups</p>
+      <h2 id="blog-heading" class="font-display text-[clamp(1.75rem,4vw,2.5rem)] font-semibold mt-3 reveal">Learning in public</h2>
+      <div class="blog-filters reveal flex flex-wrap gap-2 mt-6" role="group" aria-label="Filter notes by category">
+        <button class="filter-btn active" data-filter="all" aria-pressed="true">All</button>
+        <button class="filter-btn" data-filter="networking" aria-pressed="false">Networking</button>
+        <button class="filter-btn" data-filter="cyber" aria-pressed="false">Cyber</button>
+        <button class="filter-btn" data-filter="labs" aria-pressed="false">Labs</button>
+        <button class="filter-btn" data-filter="ctf" aria-pressed="false">CTF</button>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-8" id="blogGrid">
+        <article class="writeup-card glass spotlight reveal" data-category="networking labs">
+          <p class="font-mono text-xs text-[var(--aqua)] mb-2">NETWORKING · LAB</p>
+          <h3 class="font-display font-semibold text-lg">VLAN Segmentation Notes</h3>
+          <p class="text-sm text-[var(--slate)] mt-2">How I designed inter-VLAN routing and ACLs for a multi-department campus topology.</p>
+          <a href="https://github.com/ashvinchaudhary2003" target="_blank" rel="noopener noreferrer" class="text-xs font-mono text-[var(--violet-l)] mt-3 inline-block hover:text-[var(--aqua)]">Read notes →</a>
+        </article>
+        <article class="writeup-card glass spotlight reveal" data-category="cyber labs">
+          <p class="font-mono text-xs text-[var(--aqua)] mb-2">CYBER · LAB</p>
+          <h3 class="font-display font-semibold text-lg">DVWA SQLi Walkthrough</h3>
+          <p class="text-sm text-[var(--slate)] mt-2">Manual and automated SQL injection testing with Burp Suite and sqlmap on DVWA.</p>
+          <a href="https://github.com/ashvinchaudhary2003" target="_blank" rel="noopener noreferrer" class="text-xs font-mono text-[var(--violet-l)] mt-3 inline-block hover:text-[var(--aqua)]">Read notes →</a>
+        </article>
+        <article class="writeup-card glass spotlight reveal" data-category="ctf cyber">
+          <p class="font-mono text-xs text-[var(--aqua)] mb-2">CTF · THM</p>
+          <h3 class="font-display font-semibold text-lg">TryHackMe Pre-Security Path</h3>
+          <p class="text-sm text-[var(--slate)] mt-2">Summary of lessons and practical rooms completed across the Pre-Security learning path.</p>
+          <a href="https://tryhackme.com/p/ashvin_chaudhary" target="_blank" rel="noopener noreferrer" class="text-xs font-mono text-[var(--violet-l)] mt-3 inline-block hover:text-[var(--aqua)]">View profile →</a>
+        </article>
+        <article class="writeup-card glass spotlight reveal" data-category="networking">
+          <p class="font-mono text-xs text-[var(--aqua)] mb-2">NETWORKING</p>
+          <h3 class="font-display font-semibold text-lg">Wireshark Traffic Analysis</h3>
+          <p class="text-sm text-[var(--slate)] mt-2">Identifying protocols, anomalies and bandwidth patterns from captured lab traffic.</p>
+          <a href="https://github.com/ashvinchaudhary2003" target="_blank" rel="noopener noreferrer" class="text-xs font-mono text-[var(--violet-l)] mt-3 inline-block hover:text-[var(--aqua)]">Read notes →</a>
+        </article>
+        <article class="writeup-card glass spotlight reveal" data-category="cyber labs">
+          <p class="font-mono text-xs text-[var(--aqua)] mb-2">CYBER · LAB</p>
+          <h3 class="font-display font-semibold text-lg">Nmap Scanning Methodology</h3>
+          <p class="text-sm text-[var(--slate)] mt-2">Host discovery, port scanning and service enumeration techniques used in the home lab.</p>
+          <a href="https://github.com/ashvinchaudhary2003" target="_blank" rel="noopener noreferrer" class="text-xs font-mono text-[var(--violet-l)] mt-3 inline-block hover:text-[var(--aqua)]">Read notes →</a>
+        </article>
+        <article class="writeup-card glass spotlight reveal" data-category="ctf">
+          <p class="font-mono text-xs text-[var(--aqua)] mb-2">CTF · HTB</p>
+          <h3 class="font-display font-semibold text-lg">HTB Starting Point Notes</h3>
+          <p class="text-sm text-[var(--slate)] mt-2">Write-ups and methodology notes from early Easy machines on Hack The Box.</p>
+          <a href="https://github.com/ashvinchaudhary2003" target="_blank" rel="noopener noreferrer" class="text-xs font-mono text-[var(--violet-l)] mt-3 inline-block hover:text-[var(--aqua)]">Read notes →</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- PATH / EXPERIENCE -->
+    <section id="experience" class="container py-20 sm:py-28" aria-labelledby="path-heading">
+      <p class="section-tag reveal">06 — Path</p>
+      <h2 id="path-heading" class="font-display text-[clamp(1.75rem,4vw,2.5rem)] font-semibold mt-3 reveal">Education &amp; milestones</h2>
+      <div class="timeline-track mt-10 md:mt-12 max-w-2xl">
+        <div class="timeline-line-bg" aria-hidden="true"></div>
+        <div class="timeline-line-fg" id="timelineFg" aria-hidden="true"></div>
+        <div class="timeline-item reveal flex gap-6 pb-10">
+          <div class="timeline-node mt-1.5" aria-hidden="true"></div>
+          <div>
+            <p class="text-xs font-mono text-[var(--slate)]">2025 — 2028</p>
+            <h3 class="font-display font-semibold mt-1">BCA (Hons.) · A.M. Patel Institute of Computer Studies</h3>
+            <p class="text-sm text-[var(--slate)] mt-2 leading-relaxed">Ganpat University. Currently 1st year. Coursework includes Computer Networks, Operating Systems, Cybersecurity Fundamentals, Data Structures and Database Management.</p>
+          </div>
+        </div>
+        <div class="timeline-item reveal flex gap-6 pb-10">
+          <div class="timeline-node mt-1.5" aria-hidden="true"></div>
+          <div>
+            <p class="text-xs font-mono text-[var(--slate)]">2025 — Present</p>
+            <h3 class="font-display font-semibold mt-1">Home Lab &amp; Continuous Practice</h3>
+            <p class="text-sm text-[var(--slate)] mt-2 leading-relaxed">Built and maintain a personal lab with VirtualBox, GNS3 and Kali Linux. Daily practice on TryHackMe and Hack The Box; documenting labs and write-ups.</p>
+          </div>
+        </div>
+        <div class="timeline-item reveal flex gap-6 pb-10">
+          <div class="timeline-node mt-1.5" aria-hidden="true"></div>
+          <div>
+            <p class="text-xs font-mono text-[var(--slate)]">2024 — 2025</p>
+            <h3 class="font-display font-semibold mt-1">Cisco NetAcad Certifications</h3>
+            <p class="text-sm text-[var(--slate)] mt-2 leading-relaxed">Completed Cisco Networking Basics, Introduction to Cybersecurity, and Cybersecurity Essentials. Strong foundation in both networking and security concepts.</p>
+          </div>
+        </div>
+        <div class="timeline-item reveal flex gap-6">
+          <div class="timeline-node mt-1.5" aria-hidden="true"></div>
+          <div>
+            <p class="text-xs font-mono text-[var(--slate)]">2025</p>
+            <h3 class="font-display font-semibold mt-1">Higher Secondary (GSEB)</h3>
+            <p class="text-sm text-[var(--slate)] mt-2 leading-relaxed">Completed with 67%. Transitioned fully into computer studies and practical networking/cybersecurity learning.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="container py-20 sm:py-28" aria-labelledby="contact-heading">
+      <div class="glass spotlight p-6 sm:p-8 md:p-12 grid md:grid-cols-2 gap-8 md:gap-10 reveal relative overflow-hidden">
+        <div class="absolute -top-24 -right-24 w-72 h-72 rounded-full opacity-30 blur-3xl pointer-events-none contact-blob" aria-hidden="true"></div>
+        <div class="relative">
+          <p class="section-tag">07 — Contact</p>
+          <h2 id="contact-heading" class="font-display text-[clamp(1.75rem,4vw,2.5rem)] font-semibold mt-3">Let&apos;s connect.</h2>
+          <p class="text-[var(--slate)] mt-4 leading-relaxed max-w-sm">Open to internships, lab collaborations, and conversations about networking and cybersecurity. I usually reply within a day.</p>
+          <div class="flex flex-wrap items-center gap-3 mt-8">
+            <a href="mailto:Archaudhari2003@proton.me" class="btn btn-primary magnetic" data-magnetic>
+              <i class="fa-solid fa-envelope" aria-hidden="true"></i> Archaudhari2003@proton.me
+            </a>
+          </div>
+          <div class="flex gap-3 mt-6">
+            <a href="https://github.com/ashvinchaudhary2003" target="_blank" rel="noopener noreferrer" class="icon-link icon-github" aria-label="GitHub" data-magnetic><i class="fa-brands fa-github" aria-hidden="true"></i></a>
+            <a href="https://linkedin.com/in/ar-chaudhari2003" target="_blank" rel="noopener noreferrer" class="icon-link icon-linkedin" aria-label="LinkedIn" data-magnetic><i class="fa-brands fa-linkedin" aria-hidden="true"></i></a>
+            <a href="mailto:Archaudhari2003@proton.me" class="icon-link icon-email" aria-label="Email" data-magnetic><i class="fa-solid fa-envelope" aria-hidden="true"></i></a>
+          </div>
+          <div class="mt-8">
+            <button class="btn btn-ghost magnetic btn-download" data-magnetic data-download-resume aria-label="Download resume">
+              <span class="btn-label"><i class="fa-solid fa-download" aria-hidden="true"></i> Download Resume</span>
+              <span class="download-progress" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+       <!-- CONTACT FORM -->
+        <form id="contactForm" action="https://formspree.io/f/xeeywezg" method="POST" class="relative flex flex-col gap-4" novalidate>
+          <label class="sr-only" for="contactName">Your name</label>
+          <input type="text" id="contactName" name="name" class="field" placeholder="Your name" required autocomplete="name" />
+          
+          <label class="sr-only" for="contactEmail">Your email</label>
+          <input type="email" id="contactEmail" name="email" class="field" placeholder="Your email" required autocomplete="email" />
+          
+          <label class="sr-only" for="contactMessage">Message</label>
+          <textarea id="contactMessage" name="message" class="field" rows="4" placeholder="Tell me about an internship, collaboration, or just say hi" required></textarea>
+          
+          <button type="submit" class="btn btn-primary justify-center magnetic" data-magnetic id="formSubmitBtn">
+            <span id="formBtnLabel">Send message</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+          </button>
+          <p id="formNote" class="text-xs text-[var(--slate)] text-center" style="min-height:1em;" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="container py-8 sm:py-10 flex flex-col sm:flex-row items-center justify-between gap-4 border-t" style="border-color:var(--glass-border);" role="contentinfo">
+    <p class="text-xs text-[var(--slate)]">© <span id="year"></span> Ashvin Chaudhary. Built with curiosity and a lot of terminal tabs.</p>
+    <div class="flex flex-wrap gap-4 items-center justify-center">
+      <div class="visitor-stats text-xs font-mono text-[var(--slate)]" id="visitorStats" aria-live="polite">
+        <span class="visitor-dot" aria-hidden="true"></span>
+        <span id="visitorCount">—</span> views · <span id="liveCount">—</span> online
+      </div>
+      <p class="text-xs text-[var(--slate)] font-mono">designed &amp; built solo</p>
+      <a href="https://github.com/ashvinchaudhary2003" target="_blank" rel="noopener noreferrer" class="text-xs font-mono text-[var(--violet-l)] hover:text-[var(--aqua)] transition-colors">GitHub</a>
+    </div>
+  </footer>
+
+  <button id="back-to-top" class="glass" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  </button>
+
+  <!-- Avatar Lightbox Modal -->
+  <div id="avatarModal" class="fixed inset-0 z-[1000] hidden items-center justify-center bg-black/80 backdrop-blur-md transition-opacity duration-300 opacity-0" role="dialog" aria-modal="true" aria-label="Profile picture modal">
+    <div class="relative max-w-md w-[90%] p-2 rounded-2xl glass border border-[var(--glass-border-strong)] shadow-2xl flex flex-col items-center">
+      
+      <!-- Close Button -->
+      <button id="closeAvatarModal" class="absolute -top-4 -right-4 w-10 h-10 rounded-full bg-[var(--surface-strong)] border border-[var(--glass-border-strong)] text-[var(--text)] flex items-center justify-center hover:scale-110 transition-transform shadow-lg cursor-pointer" aria-label="Close image popup">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+      
+      <!-- Expanded Image -->
+      <img id="modalImg" src="profile.jpeg" alt="Ashvin Chaudhary full size" class="w-full max-h-[75vh] object-contain rounded-xl" />
+      
+      <!-- Caption -->
+      <p class="text-xs font-mono text-[var(--slate)] mt-3 mb-1 text-center">Ashvin Chaudhary · BCA (Hons.)</p>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
