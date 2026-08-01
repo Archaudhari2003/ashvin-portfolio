@@ -26,6 +26,56 @@
     });
   }
 
+ /* ========== HERO EYEBROW SMOOTH TYPING ANIMATION ========== */
+  function initEyebrowTyping() {
+    var lines = [
+      { id: "typeLine1", text: "// BCA (Hons.) Student" },
+      { id: "typeLine2", text: "// Networking Enthusiast" },
+      { id: "typeLine3", text: "// Cybersecurity Learner" }
+    ];
+
+    var lineIndex = 0;
+
+    function typeNextLine() {
+      if (lineIndex >= lines.length) return;
+
+      var lineObj = lines[lineIndex];
+      var el = document.getElementById(lineObj.id);
+      if (!el) return;
+
+      var fullText = lineObj.text;
+      var charIndex = 0;
+      el.classList.add("typing-active");
+
+      function typeChar() {
+        if (charIndex < fullText.length) {
+          el.textContent = fullText.substring(0, charIndex + 1);
+          charIndex++;
+          // Variable typing speed (between 35ms and 65ms per letter) for natural human feel
+          var speed = 40 + Math.random() * 25; 
+          setTimeout(typeChar, speed);
+        } else {
+          el.classList.remove("typing-active");
+          lineIndex++;
+          setTimeout(typeNextLine, 280); // Smooth 280ms pause before starting the next line
+        }
+      }
+
+      typeChar();
+    }
+
+    if (reduceMotion) {
+      lines.forEach(function (l) {
+        var el = document.getElementById(l.id);
+        if (el) el.textContent = l.text;
+      });
+    } else {
+      setTimeout(typeNextLine, 500); // 500ms initial wait after page render
+    }
+  }
+
+  initEyebrowTyping();
+
   /* ========== Learning Banner ========== */
   var learningBanner = document.getElementById("learning-banner");
   var closeLearning = document.getElementById("closeLearning");
@@ -983,54 +1033,6 @@
     countUp();
   }
 
-/* ========== Contact form (Formspree AJAX) ========== */
-  var form = document.getElementById("contactForm");
-  var formNote = document.getElementById("formNote");
-  var formBtnLabel = document.getElementById("formBtnLabel");
-
-  if (form) {
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      
-      var data = new FormData(form);
-      if (formBtnLabel) formBtnLabel.textContent = "Sending...";
-
-      fetch(form.action, {
-        method: form.method,
-        body: data,
-        headers: {
-          'Accept': 'application/json'
-        }
-      }).then(function (response) {
-        if (response.ok) {
-          if (formBtnLabel) formBtnLabel.textContent = "Send message";
-          if (formNote) {
-            formNote.style.color = "var(--aqua)";
-            formNote.textContent = "Message sent successfully! I'll get back to you soon.";
-          }
-          form.reset();
-        } else {
-          response.json().then(function (data) {
-            if (formBtnLabel) formBtnLabel.textContent = "Send message";
-            if (formNote) {
-              formNote.style.color = "var(--coral)";
-              if (Object.prototype.hasOwnProperty.call(data, 'errors')) {
-                formNote.textContent = data["errors"].map(function(error) { return error["message"]; }).join(", ");
-              } else {
-                formNote.textContent = "Oops! There was a problem submitting your form.";
-              }
-            }
-          });
-        }
-      }).catch(function (error) {
-        if (formBtnLabel) formBtnLabel.textContent = "Send message";
-        if (formNote) {
-          formNote.style.color = "var(--coral)";
-          formNote.textContent = "Oops! Network error. Please try again later.";
-        }
-      });
-    });
-  }
 
   /* ========== AVATAR LIGHTBOX MODAL ========== */
   var avatarTrigger = document.getElementById("avatarTrigger");
@@ -1087,6 +1089,174 @@
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape" && !avatarModal.classList.contains("hidden")) {
         hideAvatarModal();
+      }
+    });
+  }
+
+// ===================================================================
+  // CONTACT FORM SUBMISSION & CURVED FLIGHT ANIMATION
+  // ===================================================================
+  const contactForm = document.getElementById('contact-form');
+  const submitBtn = document.getElementById('sendBtn');
+  const sendIcon = document.getElementById('send-icon');
+  const btnText = document.getElementById('btn-text');
+  const formNote = document.getElementById('formNote');
+  const flyingPlane = document.getElementById('flyingPlane');
+  const emailTarget = document.getElementById('emailTarget');
+
+  if (contactForm) {
+    contactForm.addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      // 1. Disable submit button & compress feedback
+      if (submitBtn) submitBtn.style.pointerEvents = 'none';
+
+      if (window.gsap && submitBtn) {
+        gsap.to(submitBtn, { scale: 0.94, duration: 0.15, yoyo: true, repeat: 1 });
+      }
+
+      if (btnText) btnText.textContent = "Sending...";
+      if (formNote) formNote.textContent = "";
+
+      // 2. Hide static icon on button
+      if (sendIcon) gsap.set(sendIcon, { opacity: 0 });
+
+      // 3. Trigger Curved Flight Animation FIRST
+      if (flyingPlane && emailTarget && submitBtn) {
+        const startRect = submitBtn.getBoundingClientRect();
+        const endRect = emailTarget.getBoundingClientRect();
+
+        const startX = startRect.left + startRect.width / 2;
+        const startY = startRect.top + startRect.height / 2;
+
+        const endX = endRect.left + endRect.width / 2;
+        const endY = endRect.top + endRect.height / 2;
+
+        const controlX = (startX + endX) / 2;
+        const controlY = Math.min(startY, endY) - 160;
+
+        gsap.set(flyingPlane, {
+          x: startX,
+          y: startY,
+          scale: 0.5,
+          opacity: 0,
+          rotation: -20
+        });
+
+        const flightProgress = { t: 0 };
+        let lastX = startX;
+        let lastY = startY;
+
+        const flightTl = gsap.timeline();
+
+        // Lift upward and fade in
+        flightTl.to(flyingPlane, {
+          opacity: 1,
+          scale: 1,
+          duration: 0.35,
+          ease: "power2.out"
+        });
+
+        // Arc Flight across Bezier Curve
+        flightTl.to(flightProgress, {
+          t: 1,
+          duration: 1.8,
+          ease: "power1.inOut",
+          onUpdate: function () {
+            const t = flightProgress.t;
+
+            const currentX = (1 - t) * (1 - t) * startX + 2 * (1 - t) * t * controlX + t * t * endX;
+            const currentY = (1 - t) * (1 - t) * startY + 2 * (1 - t) * t * controlY + t * t * endY;
+
+            const deltaX = currentX - lastX;
+            const deltaY = currentY - lastY;
+            const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+
+            gsap.set(flyingPlane, {
+              x: currentX,
+              y: currentY,
+              rotation: angle
+            });
+
+            if (Math.random() < 0.6) {
+              createTrailDot(currentX, currentY);
+            }
+
+            lastX = currentX;
+            lastY = currentY;
+          }
+        });
+
+        // Disappear into target and trigger pulse
+        flightTl.to(flyingPlane, {
+          scale: 0,
+          opacity: 0,
+          duration: 0.25,
+          ease: "power2.in",
+          onComplete: function () {
+            emailTarget.classList.add("email-arrived");
+            setTimeout(() => {
+              emailTarget.classList.remove("email-arrived");
+            }, 900);
+          }
+        });
+      }
+
+      // 4. Send Form Data Asynchronously
+      const formData = new FormData(contactForm);
+
+      try {
+        const response = await fetch(contactForm.action, {
+          method: contactForm.method,
+          body: formData,
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if (response.ok) {
+          if (btnText) btnText.textContent = "✓ Message Sent";
+          if (formNote) {
+            formNote.style.color = "var(--aqua)";
+            formNote.textContent = "Message sent successfully! I'll reply soon.";
+          }
+          contactForm.reset();
+        } else {
+          if (btnText) btnText.textContent = "Error! Check Action ID";
+          if (formNote) {
+            formNote.style.color = "var(--coral)";
+            formNote.textContent = "Submission failed (404 Formspree endpoint error).";
+          }
+        }
+      } catch (error) {
+        if (btnText) btnText.textContent = "Error! Try Again";
+        if (formNote) {
+          formNote.style.color = "var(--coral)";
+          formNote.textContent = "Network error. Please try again later.";
+        }
+      } finally {
+        setTimeout(() => {
+          if (btnText) btnText.textContent = "Send Message";
+          if (submitBtn) submitBtn.style.pointerEvents = 'auto';
+          if (sendIcon) gsap.set(sendIcon, { opacity: 1 });
+        }, 4000);
+      }
+    });
+  }
+
+  // Helper function to spawn fading trail dots
+  function createTrailDot(x, y) {
+    const dot = document.createElement("div");
+    dot.className = "plane-trail-dot";
+    document.body.appendChild(dot);
+
+    gsap.set(dot, { x: x, y: y, scale: 1, opacity: 0.8 });
+
+    gsap.to(dot, {
+      scale: 0.2,
+      opacity: 0,
+      duration: 0.6,
+      ease: "power1.out",
+      onComplete: function () {
+        if (dot.parentNode) dot.parentNode.removeChild(dot);
       }
     });
   }

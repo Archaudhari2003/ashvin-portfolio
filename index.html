@@ -102,13 +102,15 @@
   </div>
 
   <main id="main-content">
-    <!-- HERO -->
+   <!-- HERO -->
     <section id="home" class="container min-h-screen flex items-center pt-28 pb-16" aria-labelledby="hero-heading">
       <div class="grid md:grid-cols-2 gap-10 lg:gap-14 items-center w-full">
         <div>
-          <p class="eyebrow hero-anim">// BCA (Hons.) Student</p>
-          <p class="eyebrow hero-anim">// Networking Enthusiast</p>
-          <p class="eyebrow hero-anim">// Cybersecurity Learner</p>
+          <div class="eyebrow-container mb-2 min-h-[4.5rem]">
+            <p class="eyebrow hero-anim" id="typeLine1"></p>
+            <p class="eyebrow hero-anim" id="typeLine2"></p>
+            <p class="eyebrow hero-anim" id="typeLine3"></p>
+          </div>
           <h1 id="hero-heading" class="hero-anim font-display font-semibold text-[clamp(2rem,5vw,3.2rem)] leading-[1.08] mt-4">
             Building secure<br />
             <span class="gradient-text">networks &amp; systems.</span>
@@ -527,9 +529,13 @@
           <h2 id="contact-heading" class="font-display text-[clamp(1.75rem,4vw,2.5rem)] font-semibold mt-3">Let&apos;s connect.</h2>
           <p class="text-[var(--slate)] mt-4 leading-relaxed max-w-sm">Open to internships, lab collaborations, and conversations about networking and cybersecurity. I usually reply within a day.</p>
           <div class="flex flex-wrap items-center gap-3 mt-8">
-            <a href="mailto:Archaudhari2003@proton.me" class="btn btn-primary magnetic" data-magnetic>
-              <i class="fa-solid fa-envelope" aria-hidden="true"></i> Archaudhari2003@proton.me
-            </a>
+           <!-- CONTACT EMAIL LINK -->
+<a href="mailto:Archaudhari2003@proton.me" id="contact-email-target" class="btn btn-primary magnetic" data-magnetic>
+  <div class="contact-email flex items-center gap-2">
+    <i id="emailTarget" class="fa-solid fa-envelope"></i>
+    <span id="emailText">Archaudhari2003@proton.me</span>
+  </div>
+</a>
           </div>
           <div class="flex gap-3 mt-6">
             <a href="https://github.com/ashvinchaudhary2003" target="_blank" rel="noopener noreferrer" class="icon-link icon-github" aria-label="GitHub" data-magnetic><i class="fa-brands fa-github" aria-hidden="true"></i></a>
@@ -544,7 +550,7 @@
           </div>
         </div>
        <!-- CONTACT FORM -->
-        <form id="contactForm" action="https://formspree.io/f/xeeywezg" method="POST" class="relative flex flex-col gap-4" novalidate>
+        <form id="contact-form" action="https://formspree.io/f/xeeywezg" method="POST" class="relative flex flex-col gap-4" novalidate>
           <label class="sr-only" for="contactName">Your name</label>
           <input type="text" id="contactName" name="name" class="field" placeholder="Your name" required autocomplete="name" />
           
@@ -554,10 +560,13 @@
           <label class="sr-only" for="contactMessage">Message</label>
           <textarea id="contactMessage" name="message" class="field" rows="4" placeholder="Tell me about an internship, collaboration, or just say hi" required></textarea>
           
-          <button type="submit" class="btn btn-primary justify-center magnetic" data-magnetic id="formSubmitBtn">
-            <span id="formBtnLabel">Send message</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-          </button>
+          <!-- CONTACT FORM SUBMIT BUTTON -->
+<button id="sendBtn" type="submit" class="btn btn-primary magnetic w-full justify-center mt-2">
+  <span class="btn-text" id="btn-text">Send Message</span>
+  <i id="send-icon" class="fa-solid fa-paper-plane"></i>
+</button>
+
+            
           <p id="formNote" class="text-xs text-[var(--slate)] text-center" style="min-height:1em;" role="status" aria-live="polite"></p>
         </form>
       </div>
@@ -598,9 +607,12 @@
     </div>
   </div>
 
-  <!-- Scripts -->
+ <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="script.js"></script>
+
+  <div id="flyingPlane">
+    <i class="fa-solid fa-paper-plane"></i>
+  </div>
 </body>
-</html>
