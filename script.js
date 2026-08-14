@@ -1104,9 +1104,42 @@
   const flyingPlane = document.getElementById('flyingPlane');
   const emailTarget = document.getElementById('emailTarget');
 
-  if (contactForm) {
+    if (contactForm) {
     contactForm.addEventListener('submit', async function (e) {
       e.preventDefault();
+
+      // ===== VALIDATION (new) =====
+      var nameVal = (document.getElementById('contactName') || {}).value || '';
+      var emailVal = (document.getElementById('contactEmail') || {}).value || '';
+      var messageVal = (document.getElementById('contactMessage') || {}).value || '';
+      nameVal = nameVal.trim();
+      emailVal = emailVal.trim();
+      messageVal = messageVal.trim();
+
+      if (!nameVal) {
+        if (formNote) {
+          formNote.style.color = 'var(--coral)';
+          formNote.textContent = 'Please enter your name.';
+        }
+        return;
+      }
+      if (!emailVal || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+        if (formNote) {
+          formNote.style.color = 'var(--coral)';
+          formNote.textContent = 'Please enter a valid email.';
+        }
+        return;
+      }
+      if (!messageVal) {
+        if (formNote) {
+          formNote.style.color = 'var(--coral)';
+          formNote.textContent = 'Please enter a message.';
+        }
+        return;
+      }
+      // clear any previous validation message
+      if (formNote) formNote.textContent = '';
+      // ===== END VALIDATION =====
 
       // 1. Disable submit button & compress feedback
       if (submitBtn) submitBtn.style.pointerEvents = 'none';
