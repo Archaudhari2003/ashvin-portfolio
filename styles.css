@@ -1168,43 +1168,68 @@ img, canvas, svg, video {
 }
 
 /* ===================================================================
-   FLYING PLANE & TRAIL ANIMATION
+   FLYING PLANE & TRAIL ANIMATION (Smooth & Hardware-Accelerated)
 =================================================================== */
 
 #flyingPlane {
   position: fixed;
   top: 0;
   left: 0;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--aqua);
-  font-size: 18px;
-  box-shadow: 0 0 25px rgba(52, 228, 200, 0.6);
+  font-size: 22px;
   z-index: 999999;
   pointer-events: none;
   opacity: 0;
-  transform: translate(-50%, -50%) scale(0);
+  will-change: transform, opacity;
+  filter: drop-shadow(0 0 12px var(--aqua)) drop-shadow(0 0 24px rgba(124, 111, 255, 0.6));
+  transform-origin: 50% 50%;
+}
+
+#flyingPlane i {
+  display: inline-block;
+  transform: rotate(45deg); /* Re-orients FontAwesome paper-plane nose to 0° forward trajectory */
+  filter: drop-shadow(0 0 4px #ffffff);
 }
 
 /* Dynamic glowing trail particle generated during flight */
 .plane-trail-dot {
   position: fixed;
+  top: 0;
+  left: 0;
   width: 8px;
   height: 8px;
   border-radius: 50%;
   background: var(--aqua);
-  box-shadow: 0 0 12px var(--aqua);
+  box-shadow: 0 0 10px var(--aqua), 0 0 20px var(--violet);
   pointer-events: none;
   z-index: 999998;
-  transform: translate(-50%, -50%);
+  will-change: transform, opacity;
+  transform-origin: 50% 50%;
 }
 
-/* Email arrival pulse & glow */
+/* Email arrival pulse & ripple ring */
 .email-arrived {
   animation: emailGlow 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.email-ripple-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--aqua);
+  box-shadow: 0 0 16px var(--aqua);
+  pointer-events: none;
+  z-index: 999997;
+  will-change: transform, opacity;
+  transform-origin: 50% 50%;
 }
 
 @keyframes emailGlow {
