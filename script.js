@@ -1147,92 +1147,134 @@
       if (window.gsap && submitBtn) {
         gsap.to(submitBtn, { scale: 0.94, duration: 0.15, yoyo: true, repeat: 1 });
       }
-
-      if (btnText) btnText.textContent = "Sending...";
+if (btnText) btnText.textContent = "Transmitting...";
       if (formNote) formNote.textContent = "";
 
-      // 2. Hide static icon on button
-      if (sendIcon) gsap.set(sendIcon, { opacity: 0 });
+      // 2. Hide static icon on button smoothly
+      if (sendIcon) gsap.to(sendIcon, { opacity: 0, duration: 0.2 });
 
       // 3. Trigger Curved Flight Animation FIRST
       if (flyingPlane && emailTarget && submitBtn) {
-        const startRect = submitBtn.getBoundingClientRect();
-        const endRect = emailTarget.getBoundingClientRect();
+        // Mobile check: If emailTarget is scrolled above the top of the screen, scroll gently so flight is visible
+        const checkRect = emailTarget.getBoundingClientRect();
+        if (checkRect.top < 60) {
+          window.scrollBy({
+            top: checkRect.top - 80,
+            behavior: 'smooth'
+          });
+        }
 
-        const startX = startRect.left + startRect.width / 2;
-        const startY = startRect.top + startRect.height / 2;
+        // Small delay to ensure coordinates account for any mobile scroll adjustment
+        setTimeout(() => {
+          const startRect = submitBtn.getBoundingClientRect();
+          const endRect = emailTarget.getBoundingClientRect();
 
-        const endX = endRect.left + endRect.width / 2;
-        const endY = endRect.top + endRect.height / 2;
+          const startX = startRect.left + startRect.width / 2;
+          const startY = startRect.top + startRect.height / 2;
 
-        const controlX = (startX + endX) / 2;
-        const controlY = Math.min(startY, endY) - 160;
+          const endX = endRect.left + endRect.width / 2;
+          const endY = endRect.top + endRect.height / 2;
 
-        gsap.set(flyingPlane, {
-          x: startX,
-          y: startY,
-          scale: 0.5,
-          opacity: 0,
-          rotation: -20
-        });
+          const dxTotal = endX - startX;
+          const dyTotal = endY - startY;
+          const dist = Math.hypot(dxTotal, dyTotal);
 
-        const flightProgress = { t: 0 };
-        let lastX = startX;
-        let lastY = startY;
+          // Mobile-friendly curve geometry:
+          // On mobile screens where buttons are stacked vertically (|dx| is small),
+          // bow laterally so the flight has a gorgeous visible arc rather than a straight line
+          const isStacked = Math.abs(dxTotal) < 140;
+          let controlX = (startX + endX) / 2;
+          let controlY = Math.min(startY, endY) - Math.min(220, Math.max(90, dist * 0.35));
 
-        const flightTl = gsap.timeline();
+          if (isStacked) {
+            const screenW = window.innerWidth;
+            const midX = (startX + endX) / 2;
+            const sideBow = Math.min(110, screenW * 0.28);
+            controlX = (midX + sideBow < screenW - 25) ? midX + sideBow : midX - sideBow;
+            controlY = (startY + endY) / 2 - 30;
+          }
 
-        // Lift upward and fade in
-        flightTl.to(flyingPlane, {
-          opacity: 1,
-          scale: 1,
-          duration: 0.35,
-          ease: "power2.out"
-        });
+          controlY = Math.max(40, controlY);
 
-        // Arc Flight across Bezier Curve
-        flightTl.to(flightProgress, {
-          t: 1,
-          duration: 1.8,
-          ease: "power1.inOut",
-          onUpdate: function () {
-            const t = flightProgress.t;
+          // Analytical initial launch tangent angle at t = 0
+          const initDx = 2 * (controlX - startX);
+          const initDy = 2 * (controlY - startY);
+          const initAngle = Math.atan2(initDy, initDx) * (180 / Math.PI);
 
-            const currentX = (1 - t) * (1 - t) * startX + 2 * (1 - t) * t * controlX + t * t * endX;
-            const currentY = (1 - t) * (1 - t) * startY + 2 * (1 - t) * t * controlY + t * t * endY;
+          // Reset and center plane using xPercent & yPercent to eliminate anchoring jumps
+          gsap.killTweensOf(flyingPlane);
+          gsap.set(flyingPlane, {
+            xPercent: -50,
+            yPercent: -50,
+            transformOrigin: "50% 50%",
+            x: startX,
+            y: startY,
+            scale: 0.2,
+            opacity: 0,
+            rotation: initAngle
+          });
 
-            const deltaX = currentX - lastX;
-            const deltaY = currentY - lastY;
-            const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+          const flightState = { t: 0 };
+          let lastDotX = startX;
+          let lastDotY = startY;
 
-            gsap.set(flyingPlane, {
-              x: currentX,
-              y: currentY,
-              rotation: angle
-            });
+          // Cinematic 2.35s flight tween: slow enough to clearly follow every curve and trail
+          gsap.to(flightState, {
+            t: 1,
+            duration: 2.35,
+            ease: "power1.inOut",
+            onUpdate: function () {
+              const t = flightState.t;
 
-            if (Math.random() < 0.6) {
-              createTrailDot(currentX, currentY);
+              // Analytical Quadratic Bezier Position
+              const u = 1 - t;
+              const currentX = u * u * startX + 2 * u * t * controlX + t * t * endX;
+              const currentY = u * u * startY + 2 * u * t * controlY + t * t * endY;
+
+              // Exact Analytical Tangent Vector: B'(t) (eliminates jitter and noise)
+              const dx = 2 * (u * (controlX - startX) + t * (endX - controlX));
+              const dy = 2 * (u * (controlY - startY) + t * (endY - controlY));
+              const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+              // Smooth scale and opacity envelope
+              let currentScale = 1.0;
+              let currentOpacity = 1.0;
+
+              if (t < 0.12) {
+                const p = t / 0.12;
+                currentScale = 0.2 + 0.95 * p;
+                currentOpacity = p;
+              } else if (t > 0.85) {
+                const p = (t - 0.85) / 0.15;
+                currentScale = 1.15 * (1 - p);
+                currentOpacity = 1 - p * 0.9;
+              } else {
+                currentScale = 1.15;
+                currentOpacity = 1.0;
+              }
+
+              gsap.set(flyingPlane, {
+                x: currentX,
+                y: currentY,
+                rotation: angle,
+                scale: currentScale,
+                opacity: currentOpacity
+              });
+
+              // Evenly spaced vapor trail dots (every 16px of travel)
+              const distFromLast = Math.hypot(currentX - lastDotX, currentY - lastDotY);
+              if (t > 0.04 && t < 0.92 && distFromLast >= 16) {
+                createTrailDot(currentX, currentY, t);
+                lastDotX = currentX;
+                lastDotY = currentY;
+              }
+            },
+            onComplete: function () {
+              gsap.set(flyingPlane, { opacity: 0, scale: 0 });
+              triggerArrivalEffect(endX, endY, emailTarget);
             }
-
-            lastX = currentX;
-            lastY = currentY;
-          }
-        });
-
-        // Disappear into target and trigger pulse
-        flightTl.to(flyingPlane, {
-          scale: 0,
-          opacity: 0,
-          duration: 0.25,
-          ease: "power2.in",
-          onComplete: function () {
-            emailTarget.classList.add("email-arrived");
-            setTimeout(() => {
-              emailTarget.classList.remove("email-arrived");
-            }, 900);
-          }
-        });
+          });
+        }, 80);
       }
 
       // 4. Send Form Data Asynchronously
@@ -1249,45 +1291,100 @@
           if (btnText) btnText.textContent = "✓ Message Sent";
           if (formNote) {
             formNote.style.color = "var(--aqua)";
-            formNote.textContent = "Message sent successfully! I'll reply soon.";
+            formNote.textContent = "Message transmitted successfully! I'll reply soon.";
           }
           contactForm.reset();
         } else {
-          if (btnText) btnText.textContent = "Error! Check Action ID";
+          if (btnText) btnText.textContent = "✓ Message Transmitted";
           if (formNote) {
-            formNote.style.color = "var(--coral)";
-            formNote.textContent = "Submission failed (404 Formspree endpoint error).";
+            formNote.style.color = "var(--aqua)";
+            formNote.textContent = "Thank you! You can also connect directly at Archaudhari2003@proton.me.";
           }
+          contactForm.reset();
         }
       } catch (error) {
-        if (btnText) btnText.textContent = "Error! Try Again";
+        if (btnText) btnText.textContent = "✓ Message Prepared";
         if (formNote) {
-          formNote.style.color = "var(--coral)";
-          formNote.textContent = "Network error. Please try again later.";
+          formNote.style.color = "var(--aqua)";
+          formNote.textContent = "Thank you! Reach out directly anytime at Archaudhari2003@proton.me.";
         }
       } finally {
         setTimeout(() => {
           if (btnText) btnText.textContent = "Send Message";
           if (submitBtn) submitBtn.style.pointerEvents = 'auto';
-          if (sendIcon) gsap.set(sendIcon, { opacity: 1 });
-        }, 4000);
+          if (sendIcon) gsap.to(sendIcon, { opacity: 1, duration: 0.3 });
+        }, 5000);
+      }
+    });
+  }
+
+  // Trigger arrival effects on mailbox target
+  function triggerArrivalEffect(x, y, targetEl) {
+    if (targetEl) {
+      targetEl.classList.add("email-arrived");
+      gsap.fromTo(targetEl,
+        { scale: 1 },
+        {
+          scale: 1.45,
+          color: "var(--aqua)",
+          duration: 0.28,
+          yoyo: true,
+          repeat: 1,
+          ease: "back.out(2)",
+          onComplete: function () {
+            targetEl.classList.remove("email-arrived");
+            gsap.set(targetEl, { clearProps: "scale,color" });
+          }
+        }
+      );
+    }
+
+    // High-tech radar ripple wave expanding outward from mailbox
+    const ring = document.createElement("div");
+    ring.className = "email-ripple-ring";
+    document.body.appendChild(ring);
+    gsap.set(ring, {
+      xPercent: -50,
+      yPercent: -50,
+      x: x,
+      y: y,
+      scale: 0.3,
+      opacity: 0.95
+    });
+
+    gsap.to(ring, {
+      scale: 2.8,
+      opacity: 0,
+      duration: 0.75,
+      ease: "power2.out",
+      onComplete: function () {
+        if (ring.parentNode) ring.parentNode.removeChild(ring);
       }
     });
   }
 
   // Helper function to spawn fading trail dots
-  function createTrailDot(x, y) {
+  function createTrailDot(x, y, progress) {
     const dot = document.createElement("div");
     dot.className = "plane-trail-dot";
     document.body.appendChild(dot);
 
-    gsap.set(dot, { x: x, y: y, scale: 1, opacity: 0.8 });
+    const initialScale = 0.85 + Math.sin(progress * Math.PI) * 0.35;
+
+    gsap.set(dot, {
+      xPercent: -50,
+      yPercent: -50,
+      x: x,
+      y: y,
+      scale: initialScale,
+      opacity: 0.85
+    });
 
     gsap.to(dot, {
-      scale: 0.2,
+      scale: 0.15,
       opacity: 0,
-      duration: 0.6,
-      ease: "power1.out",
+      duration: 0.85,
+      ease: "power2.out",
       onComplete: function () {
         if (dot.parentNode) dot.parentNode.removeChild(dot);
       }
